@@ -57,3 +57,58 @@ export function calculateNetBalance(transactions) {
   }, 0);
 
 }
+
+/* =========================
+   CASHBACK SYSTEM
+========================= */
+
+export function calculateCashback(transaction) {
+
+  if (
+    transaction.amount > 50000 &&
+    transaction.status === 'Completado'
+  ) {
+    return transaction.amount * 0.01;
+  }
+
+  return 0;
+
+}
+
+export function calculateTotalCashback(transactions) {
+
+  return transactions.reduce((total, transaction) => {
+
+    return total + calculateCashback(transaction);
+
+  }, 0);
+
+}
+
+/* =========================
+   USDT SYSTEM
+========================= */
+
+export function buyUSDT(balanceCOP, amountCOP) {
+
+  const exchangeRate = faker.number.int({
+    min: 3900,
+    max: 4300,
+  });
+
+  if (amountCOP > balanceCOP) {
+
+    return {
+      status: 'Rechazado',
+      message: 'Saldo insuficiente',
+    };
+
+  }
+
+  return {
+    status: 'Completado',
+    exchangeRate,
+    usdt: amountCOP / exchangeRate,
+  };
+
+}
