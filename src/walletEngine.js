@@ -35,3 +35,25 @@ export function generateTransactionHistory(count) {
   }));
 
 }
+
+export function calculateNetBalance(transactions) {
+
+  return transactions.reduce((balance, transaction) => {
+
+    if (transaction.status !== 'Completado') {
+      return balance;
+    }
+
+    if (transaction.type === 'Ingreso') {
+      return balance + transaction.amount;
+    }
+
+    if (transaction.type === 'Retiro') {
+      return balance - transaction.amount;
+    }
+
+    return balance;
+
+  }, 0);
+
+}
