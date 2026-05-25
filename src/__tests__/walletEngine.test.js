@@ -78,3 +78,84 @@ describe('Wallet Engine Tests', () => {
     expect(result).toBe(120000);
 
   });
+/* =========================
+     CASHBACK TESTS
+  ========================= */
+
+  test('Las transacciones menores a 50000 no generan puntos', () => {
+
+    const result = calculateCashback({
+      amount: 40000,
+      status: 'Completado',
+    });
+
+    expect(result).toBe(0);
+
+  });
+
+  test('Transacciones rechazadas no generan cashback', () => {
+
+    const result = calculateCashback({
+      amount: 100000,
+      status: 'Rechazado',
+    });
+
+    expect(result).toBe(0);
+
+  });
+
+  test('Transacciones pendientes no generan cashback', () => {
+
+    const result = calculateCashback({
+      amount: 100000,
+      status: 'Pendiente',
+    });
+
+    expect(result).toBe(0);
+
+  });
+
+  test('Transacciones completadas mayores a 50000 generan 1% cashback', () => {
+
+    const result = calculateCashback({
+      amount: 100000,
+      status: 'Completado',
+    });
+
+    expect(result).toBe(1000);
+
+  });
+
+  test('Debe calcular correctamente el cashback total', () => {
+
+    const transactions = [
+
+      {
+        amount: 100000,
+        status: 'Completado',
+      },
+
+      {
+        amount: 200000,
+        status: 'Completado',
+      },
+
+      {
+        amount: 30000,
+        status: 'Completado',
+      },
+
+      {
+        amount: 150000,
+        status: 'Rechazado',
+      },
+
+    ];
+
+    const result = calculateTotalCashback(transactions);
+
+    expect(result).toBe(3000);
+
+  });
+
+});
